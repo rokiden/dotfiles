@@ -1,0 +1,354 @@
+// -*- mode: jsonc -*-
+{
+    // "layer": "top", // Waybar at top layer
+    // "position": "bottom", // Waybar position (top|bottom|left|right)
+    "height": 24, // Waybar height (to be removed for auto height)
+    // "width": 1280, // Waybar width
+    "spacing": 0, // Gaps between modules (4px)
+    // Choose the order of the modules
+    "modules-left": [
+        "power-profiles-daemon",
+	"custom/fanmode",
+	"custom/batcare",
+        "battery",
+	"custom/powercap",
+        "cpu",
+        "memory",
+        "disk",
+	//"load",
+        "temperature",
+        "hyprland/workspaces",
+        "hyprland/submap"
+    ],
+    "modules-center": [
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "tray",
+	"custom/notification",
+        //"custom/google-tasks",
+        "backlight",
+        "pulseaudio",
+	"network",
+        "bluetooth",
+        "hyprland/language",
+        "clock",
+	"idle_inhibitor",
+	"custom/powermenu"
+    ],
+    // Modules configuration
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+	    "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "10": "0",
+            "special": "",
+            "default": ""
+        },
+        "show-special": true
+    },
+    "hyprland/submap": {
+        "format": "⌨ {} ⌨"
+    },
+    "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": "{name} {icon}",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+    "hyprland/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "hyprland/language": {
+        "format": "{short}"
+    },
+    "hyprland/window": {
+        "format": "{}",
+        "rewrite": {
+            "(.*) — Mozilla Firefox": "<span color='#FF520A'>󰈹</span> $1",
+            "(.*) - VIM": "<span color='#019331'> </span>$1",
+	    "(.*) - Obsidian - Obsidian.*": "<span color='#8060D3'>󱞏</span> $1",
+	    "(.*) - Visual Studio Code": "<span color='#0B93D7'></span> $1"
+        }
+    },
+    "sway/scratchpad": {
+        "format": "{icon} {count}",
+        "show-empty": false,
+        "format-icons": ["", ""],
+        "tooltip": true,
+        "tooltip-format": "{app}: {title}"
+    },
+    "mpd": {
+        "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ",
+        "format-disconnected": "Disconnected ",
+        "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
+        "unknown-tag": "N/A",
+        "interval": 5,
+        "consume-icons": {
+            "on": " "
+        },
+        "random-icons": {
+            "off": "<span color=\"#f53c3c\"></span> ",
+            "on": " "
+        },
+        "repeat-icons": {
+            "on": " "
+        },
+        "single-icons": {
+            "on": "1 "
+        },
+        "state-icons": {
+            "paused": "",
+            "playing": ""
+        },
+        "tooltip-format": "MPD (connected)",
+        "tooltip-format-disconnected": "MPD (disconnected)"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+    "clock": {
+        "format": "{:%R}",
+        "format-alt": "{:%a, %b %d, %Y}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode"          : "year",
+            "mode-mon-col"  : 3,
+            "weeks-pos"     : "right",
+            "on-scroll"     : 1,
+            "format": {
+                 "months":     "<span color='#ffead3'><b>{}</b></span>",
+                 "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+                 "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+                 "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+                 "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+            }
+        },
+        "actions":  {
+            "on-click-right": "mode",
+            "on-click-middle": "shift_reset",
+            "on-scroll-up": "tz_up",
+            "on-scroll-down": "tz_down",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+    "cpu": {
+	"interval": 3,
+        "format": "{usage:3}%  {icon}",
+	"format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+        "tooltip": true,
+        "states": {
+            "warning": 50,
+            "critical": 90
+        }
+    },
+    "memory": {
+        "format": "{}% ",
+	"tooltip-format": "{used:0.1f}GiB used\n{avail:0.1f}GiB avail\n{swapUsed:0.1f}GiB sw used\n{swapAvail:0.1f}GiB sw avail",
+	"interval": 5,
+        "states": {
+            "warning": 80,
+            "critical": 90
+        }
+    },
+    "disk": {
+        "format": "{free} 󰋊",
+        "states": {
+            "warning": 80,
+            "critical": 95
+        }
+    },
+    "temperature": {
+	"interval": 3,
+        // "thermal-zone": 2,
+        "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
+        "critical-threshold": 85,
+        // "format-critical": "{temperatureC}°C {icon}",
+        "format": "{temperatureC}°C {icon}",
+        "format-icons": ["", "", ""]
+    },
+    "backlight": {
+        "format": "{percent}% {icon}",
+        "format-icons": ["🌑", "🌘", "🌗", "🌖", "🌕"],
+	"scroll-step": 0.2,
+        "reverse-scrolling": true
+    },
+    "battery": {
+        "states": {
+            "warning": 20,
+            "critical": 10
+        },
+        "format": "{capacity}% {icon} {power:.1f}W",
+        "format-full": "{capacity}% {icon} {power:.1f}W",
+        "format-charging": "{capacity}%  {power:.1f}W",
+        "format-plugged": "{capacity}%  {power:.1f}W",
+        "format-alt": "{time} {icon}",
+        // "format-good": "", // An empty format will hide the module
+        // "format-full": "",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "power-profiles-daemon": {
+      "format": "{icon}",
+      "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+      "tooltip": true,
+      "format-icons": {
+        "default": "",
+        "performance": "",
+        "balanced": "",
+        "power-saver": ""
+      }
+    },
+    "network": {
+	"interval": 2,
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+        "format-wifi": "{signalStrength}%  {bandwidthDownBits:>}  {bandwidthUpBits:>} ",
+        "format-ethernet": "{ipaddr}/{cidr} ",
+        "tooltip-format": "{ifname} via {gwaddr} ",
+        "format-linked": "{ifname} (No IP) ",
+        "format-disconnected": "Disconnected ⚠",
+        "format-alt": "{essid} {ifname} {ipaddr}/{cidr}",
+	"on-click-right": "hyprctl dispatch exec '[float; size 40% 70%]' 'alacritty -e nmtui'"
+    },
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "{volume}% {icon} {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": " {icon} {format_source}",
+        "format-muted": " {format_source}",
+        "format-source": "{volume}% ",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "max-volume": 150,
+        "reverse-scrolling": true,
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-right": "hyprctl dispatch exec '[float; size 40% 70%]' pavucontrol"
+    },
+    "custom/media": {
+        "format": "{icon} {}",
+        "return-type": "json",
+        "max-length": 40,
+        "format-icons": {
+            "spotify": "",
+            "default": "🎜"
+        },
+        "escape": true,
+        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
+        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+    },
+    "custom/powermenu": {
+        "format" : "⏻",
+	"min-length": 2,
+        "tooltip": false,
+        "menu": "on-click",
+        "menu-file": "$HOME/.config/waybar/power_menu.xml", // Menu file in resources folder
+        "menu-actions": {
+            "lock": "loginctl lock-session",
+            "logout": " hyprctl dispatch exit",
+            "shutdown": "systemctl poweroff",
+            "reboot": "systemctl reboot",
+            "suspend": "systemctl suspend",
+            "hibernate": "systemctl hibernate"
+	}
+    },
+    "custom/powercap": {
+        "format": "{} ",
+	"restart-interval": "3",
+        "return-type": "json",
+        "exec": "sudo powercap.sh intel-rapl:0 3 40 80"
+    },
+    "custom/fanmode": {
+        "format": "{icon}",
+	"format-icons": {
+            "0": "󰠝",
+            "1": "󱑬"
+        },
+        "tooltip": false,
+	"return-type": "json",
+        "exec-on-event": true,
+        "interval": "once",
+        "exec": "jq -n --compact-output --arg a `sudo lglaptop.sh fan_mode` '{alt:$a,class:(\"fanmode\"+$a)}'",
+        "exec-if": "sleep 0.05",
+        "on-click": "sudo lglaptop.sh fan_mode toggle"
+    },
+    "custom/batcare": {
+        "format": "{icon}",
+	"format-icons": {
+            "80": "",
+            "100": ""
+        },
+        "tooltip": false,
+	"return-type": "json",
+        "exec-on-event": true,
+        "interval": "once",
+        "exec": "jq -n --compact-output --arg a `sudo lglaptop.sh battery_care_limit` '{alt:$a,class:(\"batcare\"+$a)}'",
+        "exec-if": "sleep 0.05",
+        "on-click": "sudo lglaptop.sh battery_care_limit toggle"
+    },
+    "custom/google-tasks": {
+      "exec": "/home/den/.config/waybar/scripts/venv/bin/python ~/.config/waybar/scripts/google-tasks.py --list-name 'Daily' --max-tooltip-items 15",
+      "return-type": "json",
+      "interval": 300,
+      "format": " {}",
+      "tooltip": true,
+      "on-click": "xdg-open https://calendar.google.com/calendar/u/0/r/tasks"
+    },
+    "custom/notification": {
+      "tooltip": false,
+      "format": "{icon}",
+      "format-icons": {
+        "notification": "󰂟",
+        "none": "󰂜",
+        "dnd-notification": "󰪑",
+        "dnd-none": "󰪑",
+        "inhibited-notification": "󰂟",
+        "inhibited-none": "󰂜",
+        "dnd-inhibited-notification": "󰪑",
+        "dnd-inhibited-none": "󰪑"
+      },
+      "return-type": "json",
+      "exec-if": "which swaync-client",
+      "exec": "swaync-client -swb",
+      "on-click": "swaync-client -t -sw",
+      "on-click-right": "swaync-client -d -sw",
+      "escape": true
+    },
+    "bluetooth": {
+      // "controller": "controller1", // specify the alias of the controller if there are more than 1 on the system
+      "format-on": "",
+      "format-off": "󰂲", // an empty format will hide the module
+      "format-connected": "󰂱",
+      "tooltip-format": "{controller_alias}\t{controller_address}",
+      "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+      "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+      "on-click": "bluetoothctl power $(bluetoothctl show | grep -q 'Powered: yes' && echo off || echo on)",
+      "on-click-right": "hyprctl dispatch exec '[float; size 30% 50%]' 'alacritty -e ~/.cargo/bin/bluetui'"
+    }
+}

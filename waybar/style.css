@@ -1,0 +1,219 @@
+@import "themes/mocha.css";
+@define-color latte_maroon #e64553;
+@define-color latte_pink #ea76cb;
+
+@define-color bg-normal @green;
+@define-color bg-warn @peach;
+@define-color bg-crit @latte_maroon;
+@define-color bg-atten @bg-crit;
+@define-color bg-passive @sky;
+@define-color bg-active @mauve;
+
+* {
+    font-family: 'Noto Sans Mono', 'Symbols Nerd Font Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
+    font-size: 14px;
+}
+
+button:hover {
+    background: inherit;
+    box-shadow: inherit;
+    text-shadow: inherit;
+}
+
+window#waybar {
+    background-color: black;
+    color: white;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+window#waybar.empty {
+    background-color: transparent;
+}
+
+.module {
+    background-color: white;
+    color: black;
+    padding: 0 10px;
+    margin: 0;
+    border: none;
+    border-left: 2px solid black;
+}
+.modules-left > widget:first-child > .module,
+.modules-center > widget:first-child > .module,
+.modules-right > widget:first-child > .module,
+#workspaces {
+    border-left: none;
+}
+
+
+.modules-left > widget:first-child > .module { border-radius: 8px 0 0 8px; }
+.modules-left > widget > .module#temperature { border-radius: 0 8px 8px 0; }
+.modules-right > widget:first-child > .module { border-radius: 8px 0 0 8px; }
+.modules-right > widget:last-child > .module { border-radius: 0 8px 8px 0; }
+/*
+.modules-left > widget:last-child > .module { border-radius: 0 8px 8px 0; }
+.modules-left > widget:nth-child(9) > .module { border-radius: 10px; }
+*/
+
+#submap { border-radius: 10px; }
+
+#window {
+    background-color: transparent;
+    color: white;
+}
+
+#workspaces {
+    margin: 0 10px;
+    padding: 0;
+    background-color: @pink;
+    color: black;
+    border-radius: 8px;
+}
+#workspaces button {
+    padding: 0 6px;
+    color: black;
+    background-color: transparent;
+    border-radius: unset;
+    border: none;
+    border-left: 2px solid black;
+}
+#workspaces > button:first-child {
+    border-left: none;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+#workspaces > button:last-child { 
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+#workspaces button.active {
+    background-color: @red;
+}
+#workspaces button.urgent {
+    background-color: @bg-atten;
+}
+#workspaces button:hover {
+    background-color: @rosewater;
+}
+#workspaces button.special {
+    padding: 0 12px;
+}
+
+@keyframes submap_blink {
+    to {
+        background-color: white;
+    }
+}
+#submap {
+    background-color: @bg-warn;
+    padding: 0 8px;
+    animation-name: submap_blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(8);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#window label {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+#clock {
+    font-size: 16px;
+}
+
+#cpu,
+#memory,
+#disk,
+#custom-powercap,
+#custom-fanmode,
+#custom-batcare,
+#temperature,
+#power-profiles-daemon.power-saver,
+#battery {
+    background-color: @bg-normal;
+}
+
+#cpu.warning,
+#custom-powercap.warning,
+#custom-fanmode.fanmode1,
+#custom-batcare.batcare100,
+#memory.warning,
+#disk.warning,
+#power-profiles-daemon.balanced,
+#battery.warning:not(.charging)
+{
+    background-color: @bg-warn;
+}
+
+#cpu.critical,
+#custom-powercap.critical,
+#memory.critical,
+#disk.critical,
+#temperature.critical,
+#power-profiles-daemon.performance
+{
+    background-color: @bg-crit;
+}
+
+@keyframes battery_blink {
+    to {
+        background-color: white;
+}
+    }
+#battery.critical:not(.charging) {
+    background-color: @bg-crit;
+    animation-name: battery_blink;
+    animation-duration: 0.25s;
+    animation-timing-function: steps(8);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#backlight,
+#network,
+#bluetooth,
+#pulseaudio,
+#custom-powermenu,
+#tray,
+#idle_inhibitor,
+#language,
+#clock,
+#custom-google-tasks,
+#custom-notification {
+    background-color: @bg-passive;
+}
+
+#language {
+    min-width: 16px;
+}
+
+#network.disconnected,
+#bluetooth.off,
+#pulseaudio.muted,
+#idle_inhibitor.activated,
+#custom-google-tasks.has-tasks,
+#custom-notification.notification,
+#custom-notification.dnd-notification,
+#custom-notification.inhibited-notification,
+#custom-notification.dnd-inhibited-notification {
+    background-color: @bg-active;
+}
+
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @bg-atten;
+}
+
+/*
+label:focus {
+    background-color: black;
+}
+*/
+

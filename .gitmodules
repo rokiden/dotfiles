@@ -1,0 +1,6 @@
+[submodule "alacritty/themes"]
+	path = alacritty/themes
+	url = https://github.com/alacritty/alacritty-theme
+[submodule "hypr/catppuccin"]
+	path = hypr/catppuccin
+	url = https://github.com/catppuccin/hyprland.git
