@@ -50,12 +50,8 @@ window#waybar.empty {
 .modules-left > widget > .module#temperature { border-radius: 0 8px 8px 0; }
 .modules-right > widget:first-child > .module { border-radius: 8px 0 0 8px; }
 .modules-right > widget:last-child > .module { border-radius: 0 8px 8px 0; }
-/*
-.modules-left > widget:last-child > .module { border-radius: 0 8px 8px 0; }
-.modules-left > widget:nth-child(9) > .module { border-radius: 10px; }
-*/
 
-#submap { border-radius: 10px; }
+#submap { border-radius: 8px; }
 
 #window {
     background-color: transparent;
