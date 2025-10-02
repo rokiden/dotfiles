@@ -119,6 +119,17 @@ window#waybar.empty {
     font-size: 16px;
 }
 
+#keyboard-state {
+    padding: 0;
+}
+#keyboard-state label {
+    padding: 0 6px;
+    border-left: 2px solid black;
+}
+#keyboard-state > label:first-child {
+    border-left: none;
+}
+
 #cpu,
 #memory,
 #disk,
@@ -175,6 +186,7 @@ window#waybar.empty {
 #tray,
 #idle_inhibitor,
 #language,
+#keyboard-state,
 #clock,
 #custom-google-tasks,
 #custom-notification {
@@ -189,6 +201,7 @@ window#waybar.empty {
 #bluetooth.off,
 #pulseaudio.muted,
 #idle_inhibitor.activated,
+#keyboard-state label.locked,
 #custom-google-tasks.has-tasks,
 #custom-notification.notification,
 #custom-notification.dnd-notification,

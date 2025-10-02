@@ -32,6 +32,7 @@
 	"network",
         "bluetooth",
         "hyprland/language",
+        "keyboard-state",
         "clock",
 	"idle_inhibitor",
 	"custom/powermenu"
@@ -61,11 +62,10 @@
     "keyboard-state": {
         "numlock": true,
         "capslock": true,
-        "format": "{name} {icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
+        "format": {
+	    "numlock": "󰎦",
+	    "capslock": "󰪛"
+	}
     },
     "hyprland/mode": {
         "format": "<span style=\"italic\">{}</span>"
