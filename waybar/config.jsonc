@@ -1,5 +1,6 @@
 // -*- mode: jsonc -*-
 {
+    "output": "!DP-2",
     "layer": "top", // Waybar at top layer
     "height": 24, // Waybar height (to be removed for auto height)
     "spacing": 0, // Gaps between modules (4px)
@@ -139,7 +140,7 @@
     },
     "temperature": {
         "interval": 3,
-        "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
+        "hwmon-path": "/sys/class/hwmon/hwmon3/temp1_input",
         "critical-threshold": 85,
         "format": "{temperatureC}°C {icon}",
         "format-icons": ["", "", ""]
@@ -227,7 +228,7 @@
         "format": "{} ",
         "restart-interval": "3",
         "return-type": "json",
-        "exec": "sudo powercap.sh intel-rapl:0 3 40 80"
+        "exec": "sudo powercap.sh intel-rapl:0 2 50 85 230"
     },
     "custom/fanmode": {
         "format": "{icon}",
