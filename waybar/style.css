@@ -137,7 +137,7 @@ window#waybar.empty {
 #custom-fanmode,
 #custom-batcare,
 #temperature,
-#power-profiles-daemon.power-saver,
+#power-profiles-daemon.balanced,
 #battery {
     background-color: @bg-normal;
 }
@@ -148,7 +148,6 @@ window#waybar.empty {
 #custom-batcare.batcare100,
 #memory.warning,
 #disk.warning,
-#power-profiles-daemon.balanced,
 #battery.warning:not(.charging)
 {
     background-color: @bg-warn;
@@ -188,6 +187,7 @@ window#waybar.empty {
 #language,
 #keyboard-state,
 #clock,
+#power-profiles-daemon.power-saver,
 #custom-google-tasks,
 #custom-notification {
     background-color: @bg-passive;
