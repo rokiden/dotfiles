@@ -157,16 +157,5 @@ configuration {
       sorting-method:    "name";
   }*/
 }
-/*
-@theme "/usr/share/rofi/themes/material.rasi"
-window { background-color: #263238DD; }
-*/
 
 @theme "~/.config/rofi/theme.rasi"
-element-icon { size: 3ch ; } 
-element { spacing: 1ch; }
-window { width: 50%; height: 50%; }
-mainbox { children: [mode-switcher, inputbar, message, listview]; }
-inputbar { children: [entry]; }
-button selected { background-color: @blue; text-color: @bg-col; }
-
