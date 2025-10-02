@@ -5,6 +5,9 @@
     "spacing": 0, // Gaps between modules (4px)
     "modules-left": [
         "power-profiles-daemon",
+        "custom/fanmode",
+        "custom/batcare",
+        "battery",
         "custom/powercap",
         "cpu",
         "memory",
@@ -19,11 +22,11 @@
     "modules-right": [
         "tray",
         "custom/notification",
+        "backlight",
         "pulseaudio",
         "network",
         "bluetooth",
         "hyprland/language",
-        "keyboard-state",
         "clock",
         "idle_inhibitor",
         "custom/powermenu"
