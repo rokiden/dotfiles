@@ -1,6 +1,6 @@
 // -*- mode: jsonc -*-
 {
-    "output": "!DP-2",
+    "output": "DP-1",
     "layer": "top", // Waybar at top layer
     "height": 24, // Waybar height (to be removed for auto height)
     "spacing": 0, // Gaps between modules (4px)
