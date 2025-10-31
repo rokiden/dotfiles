@@ -45,6 +45,9 @@ window#waybar.empty {
     border-left: none;
 }
 
+#workspaces, #submap {
+    margin-left: 10px;
+}
 
 .modules-left > widget:first-child > .module { border-radius: 8px 0 0 8px; }
 .modules-left > widget > .module#temperature { border-radius: 0 8px 8px 0; }
@@ -59,7 +62,6 @@ window#waybar.empty {
 }
 
 #workspaces {
-    margin: 0 10px;
     padding: 0;
     background-color: @pink;
     color: black;
