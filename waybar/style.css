@@ -148,6 +148,7 @@ window#waybar.empty {
 #custom-batcare.batcare100,
 #memory.warning,
 #disk.warning,
+#temperature.warning,
 #battery.warning:not(.charging)
 {
     background-color: @bg-warn;
