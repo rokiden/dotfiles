@@ -26,6 +26,7 @@
         "bluetooth",
         "hyprland/language",
         "keyboard-state",
+        "custom/color",
         "clock",
         "idle_inhibitor",
         "custom/powermenu"
@@ -308,5 +309,10 @@
       "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
       "on-click": "bluetoothctl power $(bluetoothctl show | grep -q 'Powered: yes' && echo off || echo on)",
       "on-click-right": "hyprctl dispatch exec '[float; size 30% 50%]' 'alacritty -e ~/.cargo/bin/bluetui'"
+    },
+    "custom/color": {
+      "format": "󰓠",
+      "on-click": "hyprctl hyprsunset temperature 5500",
+      "on-click-right": "hyprctl hyprsunset identity"
     }
 }
