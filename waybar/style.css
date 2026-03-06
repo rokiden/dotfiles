@@ -149,6 +149,7 @@ window#waybar.empty {
 #memory.warning,
 #disk.warning,
 #power-profiles-daemon.balanced,
+#temperature.warning,
 #battery.warning:not(.charging)
 {
     background-color: @bg-warn;
