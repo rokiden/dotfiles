@@ -6,12 +6,7 @@ size = 12.0
 
 [general]
 import = [
-#    "~/.config/alacritty/themes/themes/dracula_plus.toml"
-    "~/.config/alacritty/themes/themes/gnome_terminal.toml"
-#    "~/.config/alacritty/themes/themes/citylights.toml"
-#    "~/.config/alacritty/themes/themes/enfocado_dark.toml"
-#    "~/.config/alacritty/themes/themes/base16_default_dark.toml"
-#    "~/.config/alacritty/themes/themes/horizon_dark.toml"
+    "~/.config/alacritty/themes/themes/vscode.toml"
 ]
 
 [window]
