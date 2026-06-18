@@ -11,8 +11,7 @@
         "memory",
         "disk",
         "temperature",
-        "hyprland/workspaces#l",
-        "hyprland/workspaces#r",
+        "hyprland/workspaces",
         "hyprland/submap"
     ],
     "modules-center": [
@@ -32,43 +31,8 @@
         "custom/powermenu"
     ],
     // Modules configuration
-    "hyprland/workspaces#l": {
-        "all-outputs": true,
-        "format": "{icon}",
-        "format-icons": {
-            "1": "1",
-            "2": "2",
-            "3": "3",
-            "4": "4",
-            "5": "5",
-            "6": "6",
-            "7": "7",
-            "8": "8",
-            "9": "9",
-            "10": "0",
-            "special": "",
-            "default": ""
-        },
-        "ignore-workspaces": ["6","7","8","9","10"]
-    },
-    "hyprland/workspaces#r": {
-        "all-outputs": true,
-        "format": "{icon}",
-        "format-icons": {
-            "1": "1",
-            "2": "2",
-            "3": "3",
-            "4": "4",
-            "5": "5",
-            "6": "6",
-            "7": "7",
-            "8": "8",
-            "9": "9",
-            "10": "0",
-            "special": "",
-            "default": ""
-        },
-        "ignore-workspaces": ["1","2","3","4","5"]
+    "hyprland/workspaces": {
+        "all-outputs": true
     },
     "hyprland/submap": {
         "format": "⌨ {} ⌨"
