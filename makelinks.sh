@@ -6,7 +6,9 @@ for L in "dotfiles/vimrc .vimrc" \
 	"dotfiles/rofi .config/rofi" \
 	"dotfiles/swaync .config/swaync" \
 	"dotfiles/waybar .config/waybar" \
+	"dotfiles/tmux.conf .tmux.conf" \
 ; do
 	read -r source target <<< "$L"
+	[ -e "$target" ] && continue
 	ln -rs "$source" "$target"
 done
