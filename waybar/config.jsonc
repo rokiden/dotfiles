@@ -171,7 +171,7 @@
         "format-linked": "{ifname} (No IP) ",
         "format-disconnected": "Disconnected ⚠",
         "format-alt": "{essid} {ifname} {ipaddr}/{cidr}",
-        "on-click-right": "hyprctl dispatch exec '[float; size 40% 70%]' 'alacritty -e nmtui'"
+        "on-click-right": "hyprctl eval 'hl.exec_cmd(\"alacritty -e nmtui\",{float=true,size={\"(monitor_w*0.4)\",\"(monitor_h*0.7)\"}})'"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
@@ -193,7 +193,7 @@
         "max-volume": 150,
         "reverse-scrolling": true,
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        "on-click-right": "hyprctl dispatch exec '[float; size 40% 70%]' pavucontrol"
+        "on-click-right": "hyprctl eval 'hl.exec_cmd(\"pavucontrol\",{float=true,size={\"(monitor_w*0.4)\",\"(monitor_h*0.6)\"}})'"
     },
     "custom/powermenu": {
         "format" : "⏻",
@@ -203,9 +203,9 @@
         "menu-file": "$HOME/.config/waybar/power_menu.xml", // Menu file in resources folder
         "menu-actions": {
             "lock": "loginctl lock-session",
-            "logout": " hyprctl dispatch exit",
-            "shutdown": "systemctl poweroff",
-            "reboot": "systemctl reboot",
+            "logout": "hyprshutdown -t 'Logging out...'",
+            "shutdown": "hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff'",
+            "reboot": "hyprshutdown -t 'Rebooting...' --post-cmd 'systemctl reboot'",
             "suspend": "systemctl suspend",
             "hibernate": "systemctl hibernate"
         }
@@ -273,7 +273,7 @@
       "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
       "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
       "on-click": "bluetoothctl power $(bluetoothctl show | grep -q 'Powered: yes' && echo off || echo on)",
-      "on-click-right": "hyprctl dispatch exec '[float; size 30% 50%]' 'alacritty -e ~/.cargo/bin/bluetui'"
+      "on-click-right": "hyprctl eval 'hl.exec_cmd(\"alacritty -e ~/.cargo/bin/bluetui\",{float=true,size={\"(monitor_w*0.3)\",\"(monitor_h*0.5)\"}})'"
     },
     "custom/color": {
       "format": "󰓠",

@@ -31,3 +31,9 @@ else
         scale    = 1,
     })
 end
+
+return {
+    left   = monleft,
+    center = moncenter,
+    right  = monright,
+}
