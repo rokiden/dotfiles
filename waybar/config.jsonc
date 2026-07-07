@@ -20,6 +20,7 @@
     "modules-right": [
         "tray",
         "custom/notification",
+        "custom/record",
         "pulseaudio",
         "network",
         "bluetooth",
@@ -274,6 +275,16 @@
       "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
       "on-click": "bluetoothctl power $(bluetoothctl show | grep -q 'Powered: yes' && echo off || echo on)",
       "on-click-right": "hyprctl eval 'hl.exec_cmd(\"alacritty -e ~/.cargo/bin/bluetui\",{float=true,size={\"(monitor_w*0.3)\",\"(monitor_h*0.5)\"}})'"
+    },
+    "custom/record": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": "once",
+        "exec-on-event": true,
+        "exec": "$HOME/.config/waybar/scripts/record.sh status",
+        "on-click": "$HOME/.config/waybar/scripts/record.sh start",
+        "on-click-right": "$HOME/.config/waybar/scripts/record.sh stop",
+        "tooltip": true
     },
     "custom/color": {
       "format": "󰓠",

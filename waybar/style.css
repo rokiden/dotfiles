@@ -183,6 +183,7 @@ window#waybar.empty {
 #backlight,
 #network,
 #bluetooth,
+#custom-record,
 #pulseaudio,
 #custom-powermenu,
 #tray,
@@ -209,7 +210,8 @@ window#waybar.empty {
 #custom-notification.notification,
 #custom-notification.dnd-notification,
 #custom-notification.inhibited-notification,
-#custom-notification.dnd-inhibited-notification {
+#custom-notification.dnd-inhibited-notification,
+#custom-record.recording {
     background-color: @bg-active;
 }
 
