@@ -194,6 +194,10 @@ window#waybar.empty {
     background-color: @bg-passive;
 }
 
+#custom-ghcredits.under  { background-color: @bg-normal; }
+#custom-ghcredits.normal { background-color: @bg-passive; }
+#custom-ghcredits.over   { background-color: @bg-active; }
+
 #language {
     min-width: 16px;
 }

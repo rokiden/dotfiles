@@ -21,6 +21,7 @@
     ],
     "modules-right": [
         "tray",
+        "custom/ghcredits",
         "custom/notification",
         "backlight",
         "pulseaudio",
@@ -291,5 +292,14 @@
       "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
       "on-click": "bluetoothctl power $(bluetoothctl show | grep -q 'Powered: yes' && echo off || echo on)",
       "on-click-right": "hyprctl dispatch exec '[float; size 30% 50%]' 'alacritty -e ~/.cargo/bin/bluetui'"
+    },
+    "custom/ghcredits": {
+        "format": "󰊤 {}",
+        "return-type": "json",
+        "interval": 60,
+        "exec": ". $HOME/.config/waybar/scripts/gh_env && $HOME/.config/waybar/scripts/gh_ai_credits.py",
+        "exec-if": "test -r $HOME/.config/waybar/scripts/gh_env",
+        "on-click": "sh -c '. $HOME/.config/waybar/scripts/gh_env && xdg-open https://github.com/organizations/$GH_ORG/settings/billing/ai_usage'",
+        "tooltip": true
     }
 }
