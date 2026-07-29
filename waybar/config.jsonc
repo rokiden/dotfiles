@@ -19,6 +19,7 @@
     ],
     "modules-right": [
         "tray",
+        "custom/ghcredits",
         "custom/notification",
         "custom/record",
         "pulseaudio",
@@ -284,6 +285,15 @@
         "exec": "$HOME/.config/waybar/scripts/record.sh status",
         "on-click": "$HOME/.config/waybar/scripts/record.sh start",
         "on-click-right": "$HOME/.config/waybar/scripts/record.sh stop",
+        "tooltip": true
+    },
+    "custom/ghcredits": {
+        "format": "󰊤 {}",
+        "return-type": "json",
+        "interval": 60,
+        "exec": ". $HOME/.config/waybar/scripts/gh_env && $HOME/.config/waybar/scripts/gh_ai_credits.py",
+        "exec-if": "test -r $HOME/.config/waybar/scripts/gh_env",
+        "on-click": "sh -c '. $HOME/.config/waybar/scripts/gh_env && xdg-open https://github.com/organizations/$GH_ORG/settings/billing/ai_usage'",
         "tooltip": true
     },
     "custom/color": {
