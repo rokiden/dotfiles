@@ -8,27 +8,34 @@ spread evenly over the month), with a +-BAND_PCT dead zone:
   normal - within +-BAND_PCT of plan
   over   - over plan by more than BAND_PCT of the allowance
 
-API calls: 1 (usage). The allowance needs a 2nd call (copilot/billing) only on
-a cache miss; it is cached in /tmp for --ttl seconds (default 24h).
+API calls: organization mode uses 1 usage call plus copilot/billing on an
+allowance cache miss; user mode uses one copilot_internal/user call for both
+current usage and allowance. Organization allowances are cached in /tmp for
+--ttl seconds (default 24h).
 
 Usage:  GH_TOKEN=... GH_ORG=... ./gh_ai_credits.py [--ttl SECONDS]
-        --ttl 0 forces the allowance to be re-derived.
+   or:  GH_TOKEN=... GH_USER=... ./gh_ai_credits.py [--ttl SECONDS]
+        --ttl 0 forces the organization allowance to be re-derived; user
+        mode always refreshes its quota.
 """
 import argparse
 import calendar
 import datetime as dt
 import json
+import math
 import os
 import sys
 import syslog
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import quote
 
 PER_SEAT_USD = {"business": 30, "enterprise": 70}  # promotional rate, 2026
-PLAN_PCT = 95  # target consumption at month end
+PLAN_PCT = 99  # target consumption at month end
 BAND_PCT = 5   # dead zone around the plan line, in % of the allowance
 CACHE = "/tmp/gh_ai_credits_allowance.json"
+API_TIMEOUT = 15
 
 
 def log(msg):
@@ -57,7 +64,7 @@ def api(path, token):
     t = time.monotonic()
     status, remaining = "ERR", "?"
     try:
-        with urllib.request.urlopen(req) as r:
+        with urllib.request.urlopen(req, timeout=API_TIMEOUT) as r:
             body = json.load(r)
             status, remaining = r.status, r.headers.get("x-ratelimit-remaining", "?")
             return body
@@ -69,57 +76,187 @@ def api(path, token):
             f"({(time.monotonic() - t) * 1000:.0f}ms, ratelimit-remaining={remaining})")
 
 
-def cache_get(org, ttl):
+def cache_get(account, ttl):
     try:
-        e = json.load(open(CACHE))[org]
-        return e["allowance"] if time.time() - e["ts"] < ttl else None
+        with open(CACHE, encoding="utf-8") as f:
+            entry = json.load(f)[account]
+        allowance = float(entry["allowance"])
+        return allowance if math.isfinite(allowance) and allowance > 0 and \
+            time.time() - entry["ts"] < ttl else None
     except Exception:
         return None
 
 
-def cache_put(org, allowance):
+def cache_put(account, allowance):
     try:
-        data = json.load(open(CACHE))
+        with open(CACHE, encoding="utf-8") as f:
+            data = json.load(f)
     except Exception:
         data = {}
-    data[org] = {"allowance": allowance, "ts": time.time()}
+    data[account] = {"allowance": allowance, "ts": time.time()}
     tmp = CACHE + f".{os.getpid()}"
-    with open(tmp, "w") as f:
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(data, f)
     os.replace(tmp, CACHE)
 
 
+def finite_number(value):
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return None
+    return value if math.isfinite(value) else None
+
+
+def positive_number(value):
+    value = finite_number(value)
+    return value if value is not None and value > 0 else None
+
+
+def nonnegative_number(value):
+    value = finite_number(value)
+    return value if value is not None and value >= 0 else None
+
+
+def as_object(value, description):
+    if not isinstance(value, dict):
+        raise ValueError(f"{description} is not an object")
+    return value
+
+
+def usage_total(items, field):
+    total = 0.0
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError("billing usage item is not an object")
+        value = finite_number(item.get(field, 0))
+        if value is None:
+            raise ValueError(f"billing usage field {field} is not numeric")
+        total += value
+    return total
+
+
+def personal_usage_and_allowance(token):
+    """Read personal current usage and allowance in one quota API call.
+
+    /copilot_internal/user is undocumented, but currently exposes both the
+    included entitlement and the remaining premium-interaction quota.
+    """
+    data = api("/copilot_internal/user", token)
+    if not isinstance(data, dict):
+        raise ValueError("Copilot quota response is not an object")
+    snapshots = data.get("quota_snapshots", {})
+    interactions = (
+        snapshots.get("premium_interactions")
+        if isinstance(snapshots, dict) else None
+    )
+    if not isinstance(interactions, dict):
+        raise ValueError("Copilot quota response has no premium_interactions")
+
+    allowance = positive_number(interactions.get("entitlement"))
+    if allowance is None:
+        raise ValueError("Copilot quota response has no finite allowance")
+    if interactions.get("unlimited") is True:
+        raise ValueError("Copilot quota is unlimited")
+
+    # quota_remaining preserves the fractional included-quota value. The
+    # token-based response may omit token_based_billing, so positive quota
+    # fields—not that flag—determine current usage.
+    quota_remaining = finite_number(interactions.get("quota_remaining"))
+    remaining = finite_number(interactions.get("remaining"))
+    if quota_remaining is None and remaining is None:
+        raise ValueError("Copilot quota response has no remaining value")
+
+    if quota_remaining is not None:
+        included_used = max(0, allowance - max(0, quota_remaining))
+    elif remaining is not None:
+        included_used = max(0, allowance - max(0, remaining))
+    else:
+        included_used = 0
+
+    overage = nonnegative_number(interactions.get("overage_count")) or 0
+    reported_overage = max(0, -remaining) if remaining is not None else 0
+    used = included_used + max(overage, reported_overage)
+    return used, allowance
+
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--ttl", type=int, default=86400, help="allowance cache TTL, seconds")
+    p.add_argument("--ttl", type=int, default=86400,
+                   help="organization allowance cache TTL (user mode always refreshes)")
     a = p.parse_args()
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
     org = os.environ.get("GH_ORG")
+    user = os.environ.get("GH_USER")
     if not token:
         sys.exit("set GH_TOKEN")
-    if not org:
-        sys.exit("set GH_ORG")
+    if org and user:
+        sys.exit("set only one of GH_ORG or GH_USER")
+    if not org and not user:
+        sys.exit("set GH_ORG or GH_USER")
 
-    items = api(f"/organizations/{org}/settings/billing/ai_credit/usage", token)["usageItems"]
-    total = lambda k: sum(i.get(k, 0) for i in items)
-    used = total("grossQuantity")
+    items = None
+    if org:
+        mode, identity = "org", org
+        cache_key = f"{mode}:{identity}"
+        usage_path = f"/organizations/{quote(org, safe='')}/settings/billing/ai_credit/usage"
+        usage_response = as_object(api(usage_path, token), "billing usage response")
+        items = usage_response.get("usageItems", [])
+        if not isinstance(items, list):
+            raise ValueError("billing usage response has no usageItems list")
+        used = usage_total(items, "grossQuantity")
+        net = usage_total(items, "netQuantity")
 
-    allowance = None
-    if total("netQuantity") > 0:                      # overage -> allowance is in this response
-        allowance = total("discountQuantity")
-        cache_put(org, allowance)
+        allowance = None
+        if net > 0:                                    # overage -> allowance is in this response
+            allowance = positive_number(usage_total(items, "discountQuantity"))
+            if allowance:
+                cache_put(cache_key, allowance)
+        if not allowance:
+            allowance = cache_get(cache_key, a.ttl)
+
+        if not allowance:                              # seats x plan price / credit price
+            price = None
+            for item in items:
+                candidate = positive_number(item.get("pricePerUnit"))
+                if candidate is not None:
+                    price = candidate
+                    break
+            if price:
+                billing = as_object(
+                    api(f"/orgs/{quote(org, safe='')}/copilot/billing", token),
+                    "Copilot billing response",
+                )
+                plan_type = billing.get("plan_type")
+                if not isinstance(plan_type, str):
+                    raise ValueError("Copilot billing response has no plan_type")
+                seat_breakdown = as_object(
+                    billing.get("seat_breakdown"),
+                    "Copilot billing seat_breakdown",
+                )
+                seat_count = nonnegative_number(seat_breakdown.get("total"))
+                if seat_count is None:
+                    raise ValueError("Copilot billing response has no numeric seat total")
+                seat_price = PER_SEAT_USD.get(plan_type.lower())
+                if seat_price is None:
+                    raise ValueError(f"unsupported Copilot plan type: {plan_type}")
+                allowance = positive_number(seat_count * seat_price / price)
+                if allowance:
+                    cache_put(cache_key, allowance)
+    else:
+        try:
+            # One call supplies both current usage and the included allowance.
+            used, allowance = personal_usage_and_allowance(token)
+        except (urllib.error.HTTPError, urllib.error.URLError, ValueError, TypeError) as e:
+            log(f"personal quota lookup failed: {e}")
+            print(json.dumps({"text": "\u2026", "tooltip": "personal AI credit quota unavailable"}))
+            return
+
     if not allowance:
-        allowance = cache_get(org, a.ttl)
-    if not allowance:                                 # 2nd call: seats x per-seat $ / credit price
-        b = api(f"/orgs/{org}/copilot/billing", token)
-        price = next((i["pricePerUnit"] for i in items if i.get("pricePerUnit")), None)
-        if price:
-            allowance = b["seat_breakdown"]["total"] * PER_SEAT_USD[b["plan_type"].lower()] / price
-            cache_put(org, allowance)
-
-    if not allowance:                                 # no usage yet this period and nothing cached
-        log("no usageItems and no cached allowance -- can't derive allowance yet")
-        print(json.dumps({"text": "\u2026", "tooltip": "no AI credit usage recorded yet this period"}))
+        log("no allowance available -- can't derive included AI credit allowance")
+        tooltip = ("no AI credit usage recorded or allowance available"
+                   if org and not items else "AI credit allowance unavailable")
+        print(json.dumps({"text": "\u2026", "tooltip": tooltip}))
         return
 
     pct = used / allowance * 100
@@ -133,4 +270,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (urllib.error.URLError, OSError, ValueError, TypeError, KeyError, AttributeError) as e:
+        log(f"GitHub AI credit request failed: {e}")
+        print(json.dumps({
+            "text": "\u2026",
+            "tooltip": "GitHub AI credit data unavailable",
+        }))

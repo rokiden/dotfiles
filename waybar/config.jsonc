@@ -293,7 +293,7 @@
         "interval": 60,
         "exec": ". $HOME/.config/waybar/scripts/gh_env && $HOME/.config/waybar/scripts/gh_ai_credits.py",
         "exec-if": "test -r $HOME/.config/waybar/scripts/gh_env",
-        "on-click": "sh -c '. $HOME/.config/waybar/scripts/gh_env && xdg-open https://github.com/organizations/$GH_ORG/settings/billing/ai_usage'",
+        "on-click": "sh -c '. $HOME/.config/waybar/scripts/gh_env && if [ -n \"${GH_ORG:-}\" ]; then xdg-open \"https://github.com/organizations/$GH_ORG/settings/billing/ai_usage\"; else xdg-open https://github.com/settings/billing/ai_usage; fi'",
         "tooltip": true
     },
     "custom/color": {
