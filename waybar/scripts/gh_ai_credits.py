@@ -112,9 +112,15 @@ def main():
         allowance = cache_get(org, a.ttl)
     if not allowance:                                 # 2nd call: seats x per-seat $ / credit price
         b = api(f"/orgs/{org}/copilot/billing", token)
-        price = next(i["pricePerUnit"] for i in items if i.get("pricePerUnit"))
-        allowance = b["seat_breakdown"]["total"] * PER_SEAT_USD[b["plan_type"].lower()] / price
-        cache_put(org, allowance)
+        price = next((i["pricePerUnit"] for i in items if i.get("pricePerUnit")), None)
+        if price:
+            allowance = b["seat_breakdown"]["total"] * PER_SEAT_USD[b["plan_type"].lower()] / price
+            cache_put(org, allowance)
+
+    if not allowance:                                 # no usage yet this period and nothing cached
+        log("no usageItems and no cached allowance -- can't derive allowance yet")
+        print(json.dumps({"text": "\u2026", "tooltip": "no AI credit usage recorded yet this period"}))
+        return
 
     pct = used / allowance * 100
     plan = PLAN_PCT * month_elapsed()                   # where usage should be right now
