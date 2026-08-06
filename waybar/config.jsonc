@@ -6,6 +6,7 @@
     "spacing": 0, // Gaps between modules (4px)
     "modules-left": [
         "power-profiles-daemon",
+        "custom/ups",
         "custom/powercap",
         "cpu",
         "memory",
@@ -217,6 +218,13 @@
         "restart-interval": "3",
         "return-type": "json",
         "exec": "sudo powercap.sh intel-rapl:0 2 50 85 230"
+    },
+    "custom/ups": {
+        "format": "{}",
+        "restart-interval": "3",
+        "return-type": "json",
+        "tooltip": true,
+        "exec": "$HOME/.config/waybar/scripts/ups_status.sh Champ1K localhost 5 70 40"
     },
     "custom/fanmode": {
         "format": "{icon}",

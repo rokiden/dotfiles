@@ -136,6 +136,7 @@ window#waybar.empty {
 #memory,
 #disk,
 #custom-powercap,
+#custom-ups,
 #custom-fanmode,
 #custom-batcare,
 #temperature,
@@ -146,6 +147,7 @@ window#waybar.empty {
 
 #cpu.warning,
 #custom-powercap.warning,
+#custom-ups.warning,
 #custom-fanmode.fanmode1,
 #custom-batcare.batcare100,
 #memory.warning,
@@ -158,6 +160,7 @@ window#waybar.empty {
 
 #cpu.critical,
 #custom-powercap.critical,
+#custom-ups.critical,
 #memory.critical,
 #disk.critical,
 #temperature.critical,
