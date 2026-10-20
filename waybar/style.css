@@ -204,6 +204,9 @@ window#waybar.empty {
 #custom-ghcredits.normal { background-color: @bg-passive; }
 #custom-ghcredits.over   { background-color: @bg-active; }
 
+#custom-sunsetr.default { background-color: @bg-passive; }
+#custom-sunsetr:not(.default) { background-color: @bg-active; }
+
 #language {
     min-width: 16px;
 }

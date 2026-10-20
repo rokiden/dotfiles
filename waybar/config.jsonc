@@ -28,7 +28,7 @@
         "bluetooth",
         "hyprland/language",
         "keyboard-state",
-        "custom/color",
+        "custom/sunsetr",
         "clock",
         "idle_inhibitor",
         "custom/powermenu"
@@ -304,9 +304,12 @@
         "on-click": "sh -c '. $HOME/.config/waybar/scripts/gh_env && if [ -n \"${GH_ORG:-}\" ]; then xdg-open \"https://github.com/organizations/$GH_ORG/settings/billing/ai_usage\"; else xdg-open https://github.com/settings/billing/ai_usage; fi'",
         "tooltip": true
     },
-    "custom/color": {
-      "format": "󰓠",
-      "on-click": "hyprctl hyprsunset temperature 5500",
-      "on-click-right": "hyprctl hyprsunset identity"
+    "custom/sunsetr": {
+        "format": "󰓠",
+        "return-type": "json",
+        "interval": "once",
+        "exec-on-event": true,
+        "exec": "~/.local/bin/sunsetr status --json | jq -c '{class: .active_preset, tooltip: (\"Period: \" + .period + \"\\nState: \" + .state)}'",
+        "on-click": "~/.local/bin/sunsetr preset day"
     }
 }

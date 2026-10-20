@@ -7,6 +7,7 @@ for L in "dotfiles/vimrc .vimrc" \
 	"dotfiles/swaync .config/swaync" \
 	"dotfiles/waybar .config/waybar" \
 	"dotfiles/fontconfig .config/fontconfig" \
+	"dotfiles/sunsetr .config/sunsetr" \
 ; do
 	read -r source target <<< "$L"
 	rm -rf "$target"
